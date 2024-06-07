@@ -18,3 +18,10 @@ Resources:
       Tags:
         - Key: Name
           Value: MyVPC
+
+    #attach the internet gateway to the VPC
+  AttachGateway:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyInternetGateway
