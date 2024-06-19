@@ -77,6 +77,16 @@ Resources:
         - Key: Name
           Value: AppPrivateSubnet2B
 
+  DataPrivateSubnet2B:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "172.16.6.0/24"
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: DataPrivateSubnet2B
+
   MyRouteTable:
     Type: "AWS::EC2::RouteTable"
     Properties:
@@ -133,6 +143,9 @@ Resources:
       Protocol: "HTTP"
       TargetType: "instance"
       HealthCheckPath: "/"
+      Targets:
+        - Id: !Ref WebServerInstance1A
+        - Id: !Ref WebServerInstance2B
 
   MyListener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
