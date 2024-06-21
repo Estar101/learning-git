@@ -107,8 +107,9 @@ Resources:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
       SubnetId: !Ref PublicSubnet1A
-      RouteTableId: !Ref MyRouteTableQ
+      RouteTableId: !Ref MyRouteTable
 
+  # Bastion Host
   BastionHost:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -122,6 +123,7 @@ Resources:
         - Key: Name
           Value: BastionHost
 
+  # Bastion Security Group
   BastionSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -134,7 +136,7 @@ Resources:
           ToPort: 22
           CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
-        - IpProtocol: -1 # -1 indicates all traffic
+        - IpProtocol: -1  # -1 indicates all traffic
           FromPort: 0
           ToPort: 0
           CidrIp: 0.0.0.0/0
@@ -142,7 +144,7 @@ Resources:
         - Key: Name
           Value: BastionSG
 
-# EC2 Instance 1
+  # EC2 Instance 1A
   AppInstance1A:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -156,7 +158,7 @@ Resources:
         - Key: Name
           Value: App1
 
-# EC2 Instance 2B
+  # EC2 Instance 2B
   AppInstance2B:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -169,7 +171,7 @@ Resources:
         - Key: Name
           Value: App2
 
-# SG for App Instance 1A
+  # SG for App Instance 1A
   AppInstance1ASG:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
@@ -181,15 +183,14 @@ Resources:
           ToPort: 22
           SourceSecurityGroupId: !Ref BastionSG
 
-# SG for App Instance 2B
+  # SG for App Instance 2B
   AppInstance2BSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      GroupDescription: "Allow ICMP Ping from APp1"
+      GroupDescription: "Allow ICMP Ping from App1"
       VpcId: !Ref MyVPC
       SecurityGroupIngress:
         - IpProtocol: icmp
           FromPort: -1
           ToPort: -1
           SourceSecurityGroupId: !Ref AppInstance1ASG
-
